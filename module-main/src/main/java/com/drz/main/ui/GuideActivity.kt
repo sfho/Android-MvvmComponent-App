@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.drz.main.R
 import com.drz.main.bean.CustomBean
+import com.drz.main.databinding.MainActivityGuideBinding
 import com.drz.main.viewholder.CustomPageViewHolder
 import com.gyf.immersionbar.BarHide
 import com.gyf.immersionbar.ImmersionBar
@@ -19,7 +20,6 @@ import com.zhpan.bannerview.constants.TransformerStyle
 import com.zhpan.bannerview.holder.HolderCreator
 import com.zhpan.bannerview.utils.BannerUtils
 import com.zhpan.indicator.enums.IndicatorSlideMode
-import kotlinx.android.synthetic.main.main_activity_guide.*
 
 import java.util.ArrayList
 import java.util.Random
@@ -27,6 +27,7 @@ import java.util.Random
 class GuideActivity : BaseDataActivity(), HolderCreator<CustomPageViewHolder> {
 
     private lateinit var mViewPager: BannerViewPager<CustomBean, CustomPageViewHolder>
+    private lateinit var binding: MainActivityGuideBinding
 
     private val des = arrayOf("在这里\n你可以听到周围人的心声", "在这里\nTA会在下一秒遇见你", "在这里\n不再错过可以改变你一生的人")
 
@@ -46,7 +47,9 @@ class GuideActivity : BaseDataActivity(), HolderCreator<CustomPageViewHolder> {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main_activity_guide)
+        binding = MainActivityGuideBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
         ImmersionBar.with(this)
                 .titleBar(findViewById<View>(R.id.top_view))
                 .hideBar(BarHide.FLAG_HIDE_NAVIGATION_BAR)
@@ -84,23 +87,23 @@ class GuideActivity : BaseDataActivity(), HolderCreator<CustomPageViewHolder> {
     }
 
     private fun updateUI(position: Int) {
-        tv_describe?.text = des[position]
-        val translationAnim = ObjectAnimator.ofFloat(tv_describe, "translationX", -120f, 0f)
+        binding.tvDescribe?.text = des[position]
+        val translationAnim = ObjectAnimator.ofFloat(binding.tvDescribe, "translationX", -120f, 0f)
         translationAnim.duration = ANIMATION_DURATION.toLong()
         translationAnim.interpolator = DecelerateInterpolator()
-        val alphaAnimator1 = ObjectAnimator.ofFloat(tv_describe, "alpha", 0f, 1f)
+        val alphaAnimator1 = ObjectAnimator.ofFloat(binding.tvDescribe, "alpha", 0f, 1f)
         alphaAnimator1.duration = ANIMATION_DURATION.toLong()
         val animatorSet = AnimatorSet()
         animatorSet.playTogether(translationAnim, alphaAnimator1)
         animatorSet.start()
 
-        if (position == mViewPager.list.size - 1 && btn_start?.visibility == View.GONE) {
-            btn_start?.visibility = View.VISIBLE
+        if (position == mViewPager.list.size - 1 && binding.btnStart?.visibility == View.GONE) {
+            binding.btnStart?.visibility = View.VISIBLE
             ObjectAnimator
-                    .ofFloat(btn_start, "alpha", 0f, 1f)
+                    .ofFloat(binding.btnStart, "alpha", 0f, 1f)
                     .setDuration(ANIMATION_DURATION.toLong()).start()
         } else {
-            btn_start?.visibility = View.GONE
+            binding.btnStart?.visibility = View.GONE
         }
     }
 
